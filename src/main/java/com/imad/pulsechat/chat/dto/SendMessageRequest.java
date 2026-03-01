@@ -13,6 +13,5 @@ import java.util.UUID;
 @Builder
 public class SendMessageRequest {
     private UUID conversationId;
-    private UUID senderId;
     private String content;
 }

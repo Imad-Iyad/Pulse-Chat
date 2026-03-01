@@ -5,14 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ConversationResponse {
-    private UUID conversationId;
-    private Set<UUID> participantIds;
+public class CreateConversationRequest {
+    private UUID user1Id;
+    private UUID user2Id;
 }

@@ -2,10 +2,13 @@ package com.imad.pulsechat.chat;
 
 import com.imad.pulsechat.chat.dto.MessageResponse;
 import com.imad.pulsechat.chat.dto.SendMessageRequest;
+import com.imad.pulsechat.chat.dto.TypingEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+
+import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
@@ -15,9 +18,16 @@ public class ChatWebSocketController {
     private final ChatService chatService;
 
     @MessageMapping("/chat.send")
-    public void sendMessage(SendMessageRequest request) {
+    public void sendMessage(
+            SendMessageRequest request,
+            Principal principal
+    ) {
 
-        Message savedMessage = chatService.saveMessage(request);
+        // username جاي من JWT
+        String username = principal.getName();
+
+        Message savedMessage =
+                chatService.saveMessage(request, username);
 
         MessageResponse response = new MessageResponse(
                 savedMessage.getConversation().getId(),
@@ -27,7 +37,31 @@ public class ChatWebSocketController {
         );
 
         messagingTemplate.convertAndSend(
-                "/topic/conversation/" + savedMessage.getConversation().getId(),
+                "/topic/conversation/" +
+                        savedMessage.getConversation().getId(),
+                response
+        );
+    }
+
+    @MessageMapping("/chat.typing")
+    public void typing(TypingEvent request, Principal principal) {
+
+        String username = principal.getName();
+
+        //تحقق إنه المستخدم participant
+        chatService.validateParticipant(
+                request.getConversationId(),
+                username
+        );
+
+        TypingEvent response = new TypingEvent();
+        response.setConversationId(request.getConversationId());
+        response.setUsername(username);
+        response.setTyping(request.isTyping());
+
+        messagingTemplate.convertAndSend(
+                "/topic/conversation/" +
+                        request.getConversationId() + "/typing",
                 response
         );
     }
