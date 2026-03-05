@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PulseChat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Login Screen -->
+<div id="auth">
+    <h2>Login</h2>
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <p id="error" class="error"></p>
+</div>
+
+<!-- Main App -->
+<div id="app" style="display:none;">
+    <h2>Welcome to PulseChat</h2>
+    <button onclick="logout()">Logout</button>
+
+    <hr>
+
+    <h3>Search Users</h3>
+    <input id="searchInput" placeholder="Search username...">
+    <button onclick="searchUsers()">Search</button>
+
+    <ul id="results"></ul>
+</div>
+
+<!-- Chat UI -->
+<div id="chat" style="display:none;">
+    <h3 id="chatTitle"></h3>
+    <div id="messages"></div>
+    <input id="messageInput" placeholder="Type message...">
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

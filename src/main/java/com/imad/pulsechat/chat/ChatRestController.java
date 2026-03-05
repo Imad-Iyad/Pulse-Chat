@@ -1,13 +1,15 @@
 package com.imad.pulsechat.chat;
 
 import com.imad.pulsechat.chat.dto.ConversationResponse;
-import com.imad.pulsechat.chat.dto.CreateConversationRequest;
 import com.imad.pulsechat.chat.dto.MessageResponse;
 import com.imad.pulsechat.user.User;
+import com.imad.pulsechat.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -17,8 +19,9 @@ import java.util.stream.Collectors;
 public class ChatRestController {
 
     private final ChatService chatService;
+    private final UserRepository userRepository;
 
-    @GetMapping("/{conversationId}/messages")
+    @GetMapping("/messages/{conversationId}")
     public Page<MessageResponse> getMessages(
             @PathVariable UUID conversationId,
             @RequestParam(defaultValue = "0") int page,
@@ -30,15 +33,22 @@ public class ChatRestController {
                 .map(chatService::mapToResponse);
     }
 
-    @PostMapping
+    @PostMapping("/{userId}")
     public ConversationResponse createConversation(
-            @RequestBody CreateConversationRequest request
+            @PathVariable UUID userId,
+            Authentication authentication
     ) {
+
+        String username = (String) authentication.getPrincipal();
+
+        User currentUser = userRepository
+                .findByUsername(username)
+                .orElseThrow();
 
         Conversation conversation =
                 chatService.createOrGetPrivateConversation(
-                        request.getUser1Id(),
-                        request.getUser2Id()
+                        currentUser.getId(),
+                        userId
                 );
 
         return new ConversationResponse(
@@ -48,5 +58,13 @@ public class ChatRestController {
                         .map(User::getId)
                         .collect(Collectors.toSet())
         );
+    }
+
+    @GetMapping("/api/me")
+    public String me(Principal principal) {
+        if (principal == null) {
+            return "Principal is null";
+        }
+        return principal.getName();
     }
 }
