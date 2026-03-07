@@ -86,8 +86,6 @@ async function searchUsers() {
 // ------------------- START CONVERSATION -------------------
 async function startConversation(userId, username) {
 
-    try {
-
         const response = await fetch(`http://localhost:8081/api/conversations/${userId}`, {
             method: "POST",
             headers: {
@@ -102,17 +100,15 @@ async function startConversation(userId, username) {
 
         const conversation = await response.json();
 
-        conversationId = conversation.id;
+        conversationId = conversation.conversationId;
 
         document.getElementById("chatTitle").innerText = "Chat with " + username;
         document.getElementById("chat").style.display = "block";
 
-    } catch (error) {
-
-        console.error(error);
-        alert("Error creating conversation");
-
-    }
+        // تحميل الرسائل القديمة
+        await loadMessages();
+        // الاتصال بالويب سوكيت
+        connectWebSocket();
 }
 
 // ------------------- CONNECT TO WEBSOCKET -------------------
@@ -120,26 +116,39 @@ function connectWebSocket() {
     const socket = new SockJS(`${API_URL}/ws`);
     stompClient = Stomp.over(socket);
 
-    stompClient.connect({}, function (frame) {
+    stompClient.connect(
+        {
+            Authorization: "Bearer " + token
+        },
+        function (frame){
         console.log('Connected: ' + frame);
 
         // Subscribe to messages from the conversation
         stompClient.subscribe(`/topic/conversation/${conversationId}`, function (message) {
-            showMessage(message.body);
+            const msg = JSON.parse(message.body);
+            showMessage(msg.senderId + ": " + msg.content);
         });
     });
 }
 
 // ------------------- SEND MESSAGE -------------------
 function sendMessage() {
+
     const message = document.getElementById("messageInput").value;
+
     if (!message) return;
 
-    const messageObj = { content: message, conversationId };
+    const messageObj = {
+        content: message,
+        conversationId: conversationId
+    };
 
-    stompClient.send("/app/chat.send", {}, JSON.stringify(messageObj));
-
-    showMessage(message);
+    stompClient.send(
+        "/app/chat.send",
+        {},
+        JSON.stringify(messageObj)
+    );
+    showMessage("Me: " + message);
     document.getElementById("messageInput").value = "";
 }
 
@@ -160,3 +169,33 @@ window.onload = () => {
         showApp();
     }
 };
+
+// ------------------ LOAD MESSAGES ---------------------------------
+async function loadMessages() {
+
+    const response = await fetch(
+        `${API_URL}/api/conversations/${conversationId}/messages?page=0&size=50`,
+        {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        }
+    );
+
+    const data = await response.json();
+    console.log(data);
+
+    const messagesDiv = document.getElementById("messages");
+    messagesDiv.innerHTML = "";
+
+    data.content.forEach(msg => {
+
+        const messageEl = document.createElement("div");
+
+        messageEl.innerText =
+            msg.senderId + ": " + msg.content;
+
+        messagesDiv.appendChild(messageEl);
+
+    });
+}

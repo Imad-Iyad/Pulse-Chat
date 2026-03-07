@@ -21,7 +21,7 @@ public class ChatRestController {
     private final ChatService chatService;
     private final UserRepository userRepository;
 
-    @GetMapping("/messages/{conversationId}")
+    @GetMapping("/{conversationId}/messages")
     public Page<MessageResponse> getMessages(
             @PathVariable UUID conversationId,
             @RequestParam(defaultValue = "0") int page,

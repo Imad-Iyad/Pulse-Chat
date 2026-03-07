@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 
@@ -17,13 +18,10 @@ public class ChatWebSocketController {
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatService chatService;
 
+    @Transactional
     @MessageMapping("/chat.send")
-    public void sendMessage(
-            SendMessageRequest request,
-            Principal principal
-    ) {
+    public void sendMessage(SendMessageRequest request, Principal principal) {
 
-        // username جاي من JWT
         String username = principal.getName();
 
         Message savedMessage =
@@ -38,8 +36,8 @@ public class ChatWebSocketController {
 
         messagingTemplate.convertAndSend(
                 "/topic/conversation/" +
-                        savedMessage.getConversation().getId(),
-                response
+                        request.getConversationId(),
+                        response
         );
     }
 
@@ -48,7 +46,6 @@ public class ChatWebSocketController {
 
         String username = principal.getName();
 
-        //تحقق إنه المستخدم participant
         chatService.validateParticipant(
                 request.getConversationId(),
                 username
