@@ -10,8 +10,8 @@
 <!-- Login Screen -->
 <div id="auth">
     <h2>Login</h2>
-    <input id="username" placeholder="Username">
-    <input id="password" type="password" placeholder="Password">
+    <label for="username"></label><input id="username" placeholder="Username">
+    <label for="password"></label><input id="password" type="password" placeholder="Password">
     <button onclick="login()">Login</button>
     <p id="error" class="error"></p>
 </div>
@@ -24,7 +24,7 @@
     <hr>
 
     <h3>Search Users</h3>
-    <input id="searchInput" placeholder="Search username...">
+    <label for="searchInput"></label><input id="searchInput" placeholder="Search username...">
     <button onclick="searchUsers()">Search</button>
 
     <ul id="results"></ul>
@@ -34,7 +34,7 @@
 <div id="chat" style="display:none;">
     <h3 id="chatTitle"></h3>
     <div id="messages" class="messages-box"></div>
-    <input id="messageInput" placeholder="Type message...">
+    <label for="messageInput"></label><input id="messageInput" placeholder="Type message...">
     <button onclick="sendMessage()">Send</button>
 </div>
 
