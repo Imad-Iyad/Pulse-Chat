@@ -15,6 +15,7 @@ import java.util.UUID;
 public class MessageResponse {
     private UUID conversationId;
     private UUID senderId;
+    private String senderUsername;
     private String content;
     private LocalDateTime sentAt;
 }

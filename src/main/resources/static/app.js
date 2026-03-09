@@ -2,6 +2,8 @@ const API_URL = "http://localhost:8081";
 let token = null;
 let conversationId = null;
 let stompClient = null;
+let currentUsername = null;
+let subscription = null;
 
 // ------------------- LOGIN -------------------
 async function login() {
@@ -25,10 +27,10 @@ async function login() {
 
         const data = await response.json();
         token = data.token;
-
+        currentUsername = username;
         localStorage.setItem("token", token);
-
         showApp();
+
     } catch (err) {
         errorEl.innerText = "Server connection failed";
     }
@@ -113,52 +115,85 @@ async function startConversation(userId, username) {
 
 // ------------------- CONNECT TO WEBSOCKET -------------------
 function connectWebSocket() {
+
     const socket = new SockJS(`${API_URL}/ws`);
     stompClient = Stomp.over(socket);
 
     stompClient.connect(
-        {
-            Authorization: "Bearer " + token
-        },
-        function (frame){
-        console.log('Connected: ' + frame);
+        { Authorization: "Bearer " + token },
+        function(frame) {
 
-        // Subscribe to messages from the conversation
-        stompClient.subscribe(`/topic/conversation/${conversationId}`, function (message) {
-            const msg = JSON.parse(message.body);
-            showMessage(msg.senderId + ": " + msg.content);
-        });
-    });
+            console.log("Connected: " + frame);
+
+            // إلغاء الاشتراك القديم
+            if (subscription) {
+                subscription.unsubscribe();
+            }
+
+            // الاشتراك الجديد
+            subscription = stompClient.subscribe(
+                `/topic/conversation/${conversationId}`,
+                function(message) {
+
+                    const msg = JSON.parse(message.body);
+
+                    if(msg.senderUsername === currentUsername){
+                        showMessage("Me", msg.content);
+                    }else{
+                        showMessage(msg.senderUsername, msg.content);
+                    }
+
+                }
+            );
+
+        }
+    );
 }
 
 // ------------------- SEND MESSAGE -------------------
 function sendMessage() {
 
+    if(!stompClient || !stompClient.connected){
+        alert("WebSocket not connected yet");
+        return;
+    }
+
     const message = document.getElementById("messageInput").value;
 
     if (!message) return;
 
-    const messageObj = {
-        content: message,
-        conversationId: conversationId
-    };
-
     stompClient.send(
         "/app/chat.send",
         {},
-        JSON.stringify(messageObj)
+        JSON.stringify({
+            content: message,
+            conversationId: conversationId
+        })
     );
-    showMessage("Me: " + message);
+
     document.getElementById("messageInput").value = "";
 }
 
 // ------------------- SHOW MESSAGE -------------------
-function showMessage(message) {
+function showMessage(sender, content) {
+
     const messagesDiv = document.getElementById("messages");
-    const newMessage = document.createElement("div");
-    newMessage.innerText = message;
-    messagesDiv.appendChild(newMessage);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight; // auto-scroll
+
+    const messageEl = document.createElement("div");
+
+    messageEl.classList.add("message");
+
+    if (sender === "Me") {
+        messageEl.classList.add("my-message");
+        messageEl.innerText = content;
+    } else {
+        messageEl.classList.add("other-message");
+        messageEl.innerText = sender + ": " + content;
+    }
+
+    messagesDiv.appendChild(messageEl);
+
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
 // ------------------- AUTO LOGIN IF TOKEN EXISTS -------------------
@@ -190,12 +225,11 @@ async function loadMessages() {
 
     data.content.forEach(msg => {
 
-        const messageEl = document.createElement("div");
-
-        messageEl.innerText =
-            msg.senderId + ": " + msg.content;
-
-        messagesDiv.appendChild(messageEl);
+        if(msg.senderUsername === currentUsername){
+            showMessage("Me", msg.content);
+        }else{
+            showMessage(msg.senderUsername, msg.content);
+        }
 
     });
 }

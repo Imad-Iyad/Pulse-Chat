@@ -69,6 +69,7 @@ public class ChatService {
         return new MessageResponse(
                 message.getConversation().getId(),
                 message.getSender().getId(),
+                message.getSender().getUsername(),
                 message.getContent(),
                 message.getSentAt()
         );

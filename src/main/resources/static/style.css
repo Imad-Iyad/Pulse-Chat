@@ -54,3 +54,30 @@ li {
 li:hover {
     background-color: #e0e0e0; /* تغيير اللون عند التمرير فوق الزر */
 }
+
+.messages-box {
+    height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    max-width: 60%;
+    padding: 8px 12px;
+    margin: 5px 0;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.my-message {
+    align-self: flex-end;
+    background-color: #dcf8c6;
+}
+
+.other-message {
+    align-self: flex-start;
+    background-color: #f1f0f0;
+}

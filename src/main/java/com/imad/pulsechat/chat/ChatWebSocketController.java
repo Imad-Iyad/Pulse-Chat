@@ -30,6 +30,7 @@ public class ChatWebSocketController {
         MessageResponse response = new MessageResponse(
                 savedMessage.getConversation().getId(),
                 savedMessage.getSender().getId(),
+                savedMessage.getSender().getUsername(),
                 savedMessage.getContent(),
                 savedMessage.getSentAt()
         );
