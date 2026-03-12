@@ -9,11 +9,38 @@
 
 <!-- Login Screen -->
 <div id="auth">
-    <h2>Login</h2>
-    <label for="username"></label><input id="username" placeholder="Username">
-    <label for="password"></label><input id="password" type="password" placeholder="Password">
-    <button onclick="login()">Login</button>
-    <p id="error" class="error"></p>
+
+    <!-- LOGIN -->
+    <div id="loginBox">
+        <h2>Login</h2>
+        <label for="username"></label><input id="username" placeholder="Username">
+        <label for="password"></label><input id="password" type="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <p id="error" class="error"></p>
+        <p>
+            Don't have account?
+            <a href="#" onclick="showRegister()">Create Account</a>
+        </p>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="registerBox" style="display:none">
+        <h2>Create Account</h2>
+        <label for="registerUsername"></label><input id="registerUsername" placeholder="Username">
+        <br><br>
+        <label for="registerDisplayName"></label><input id="registerDisplayName" placeholder="Display name">
+        <br><br>
+        <label for="registerEmail"></label><input id="registerEmail" placeholder="Email">
+        <br><br>
+        <label for="registerPassword"></label><input id="registerPassword" type="password" placeholder="Password">
+        <br><br>
+        <button onclick="register()">Create Account</button>
+        <p>
+            Already have account?
+            <a href="#" onclick="showLogin()">Login</a>
+        </p>
+    </div>
+
 </div>
 
 <!-- Main App -->

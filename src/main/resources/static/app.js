@@ -233,3 +233,50 @@ async function loadMessages() {
 
     });
 }
+
+// -----------------------------------------------------------------------------------------------
+function showRegister(){
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("registerBox").style.display = "block";
+}
+
+function showLogin(){
+    document.getElementById("registerBox").style.display = "none";
+    document.getElementById("loginBox").style.display = "block";
+}
+
+async function register(){
+
+    const username = document.getElementById("registerUsername").value;
+    const displayName = document.getElementById("registerDisplayName").value;
+    const email = document.getElementById("registerEmail").value;
+    const password = document.getElementById("registerPassword").value;
+
+    try{
+
+        const response = await fetch(`${API_URL}/api/auth/register`,{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify({
+                username:username,
+                displayName:displayName,
+                email:email,
+                password:password
+            })
+        });
+
+        if(!response.ok){
+            alert("Registration failed");
+            return;
+        }
+
+        alert("Account created successfully");
+
+        showLogin();
+
+    }catch(err){
+        alert("Server error");
+    }
+}
