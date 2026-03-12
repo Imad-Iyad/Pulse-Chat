@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -58,13 +57,5 @@ public class ChatRestController {
                         .map(User::getId)
                         .collect(Collectors.toSet())
         );
-    }
-
-    @GetMapping("/api/me")
-    public String me(Principal principal) {
-        if (principal == null) {
-            return "Principal is null";
-        }
-        return principal.getName();
     }
 }
