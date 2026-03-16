@@ -1,83 +1,128 @@
-body {
-    font-family: Arial, sans-serif;
-    max-width: 600px;
-    margin: 50px auto;
-    text-align: center;
+/* -------- GLOBAL -------- */
+
+body{
+    font-family: "Segoe UI", Arial, sans-serif;
+    background:#f4f6f9;
+    margin:0;
+    padding:0;
 }
 
-input {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
-    padding: 8px;
+h2{
+    margin-top:0;
 }
 
-button {
-    padding: 8px 15px;
-    cursor: pointer;
+button{
+    background:#4CAF50;
+    color:white;
+    border:none;
+    padding:8px 14px;
+    border-radius:6px;
+    cursor:pointer;
 }
 
-#messages {
-    border: 1px solid #ccc;
-    height: 300px;
-    overflow-y: scroll;
-    margin: 10px 0;
-    padding: 5px;
-    text-align: left;
+button:hover{
+    background:#43a047;
 }
 
-#chat {
-    margin-top: 20px;
-    display: block;
-    text-align: left;
+input{
+    padding:8px;
+    border:1px solid #ddd;
+    border-radius:6px;
+    width:100%;
+    box-sizing:border-box;
 }
 
-ul {
-    list-style: none;
-    padding: 0;
+/* -------- AUTH -------- */
+
+#auth{
+    width:350px;
+    margin:100px auto;
+    padding:25px;
+    background:white;
+    border-radius:10px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.1);
 }
 
-.error {
-    color: red;
+/* -------- MAIN APP -------- */
+
+#app{
+    max-width:900px;
+    margin:30px auto;
 }
 
-li {
-    cursor: pointer;
-    padding: 10px;
-    margin: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #f0f0f0;
-    text-align: left;
+/* -------- SEARCH -------- */
+
+#searchInput{
+    width:100%;
 }
 
-li:hover {
-    background-color: #e0e0e0; /* تغيير اللون عند التمرير فوق الزر */
+#results button{
+    background:white;
+    border:1px solid #ddd;
+    color:#333;
 }
 
-.messages-box {
-    height: 400px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
+#results button:hover{
+    background:#f2f2f2;
 }
 
-.message {
-    max-width: 60%;
-    padding: 8px 12px;
-    margin: 5px 0;
-    border-radius: 10px;
-    font-size: 14px;
+/* -------- CHAT -------- */
+
+#chat{
+    margin-top:20px;
+    background:white;
+    border-radius:10px;
+    padding:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
-.my-message {
-    align-self: flex-end;
-    background-color: #dcf8c6;
+/* -------- MESSAGES BOX -------- */
+
+.messages-box{
+    height:400px;
+    overflow-y:auto;
+    border:1px solid #eee;
+    padding:10px;
+    border-radius:8px;
+    background:#fafafa;
+
+    display:flex;
+    flex-direction:column;
 }
 
-.other-message {
-    align-self: flex-start;
-    background-color: #f1f0f0;
+/* -------- MESSAGE BUBBLES -------- */
+
+.message{
+    max-width:60%;
+    padding:8px 12px;
+    margin:6px 0;
+    border-radius:16px;
+    font-size:14px;
+    word-wrap:break-word;
+}
+
+.my-message{
+    align-self:flex-end;
+    background:#dcf8c6;
+}
+
+.other-message{
+    align-self:flex-start;
+    background:#e4e6eb;
+}
+
+/* -------- INPUT AREA -------- */
+
+#messageInput{
+    margin-top:10px;
+}
+
+.send-area{
+    display:flex;
+    gap:10px;
+    margin-top:10px;
+}
+
+.send-area input{
+    flex:1;
 }

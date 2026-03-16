@@ -17,10 +17,7 @@ public class WebSocketEventListener {
     private final PresenceService presenceService;
 
     @EventListener
-    public void handleConnect(
-            SessionConnectEvent event
-    ) {
-
+    public void handleConnect(SessionConnectEvent event) {
         StompHeaderAccessor accessor =
                 StompHeaderAccessor.wrap(event.getMessage());
 
@@ -32,10 +29,7 @@ public class WebSocketEventListener {
     }
 
     @EventListener
-    public void handleDisconnect(
-            SessionDisconnectEvent event
-    ) {
-
+    public void handleDisconnect(SessionDisconnectEvent event) {
         StompHeaderAccessor accessor =
                 StompHeaderAccessor.wrap(event.getMessage());
 

@@ -58,11 +58,13 @@
 </div>
 
 <!-- Chat UI -->
-<div id="chat" style="display:none;">
+<div id="chat">
     <h3 id="chatTitle"></h3>
     <div id="messages" class="messages-box"></div>
-    <label for="messageInput"></label><input id="messageInput" placeholder="Type message...">
-    <button onclick="sendMessage()">Send</button>
+    <div class="send-area">
+        <label for="messageInput"></label><input id="messageInput" placeholder="Type message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
 </div>
 
 <!-- WebSocket Libraries -->
