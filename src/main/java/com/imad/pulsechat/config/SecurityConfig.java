@@ -36,9 +36,22 @@ public class SecurityConfig {
                 .cors(cors -> {})
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        // السماح بصفحة الموقع
+                        .requestMatchers(
+                                "/",
+                                "/index.html",
+                                "/chat.html",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**"
+                        ).permitAll()
+                        // auth APIs
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/ws/**").permitAll() // مؤقتاً
-                        .requestMatchers(SWAGGER_WHITELIST).permitAll() // Allows Swagger
+                        // websocket
+                        .requestMatchers("/ws/**").permitAll()
+                        // swagger
+                        .requestMatchers(SWAGGER_WHITELIST).permitAll()
+                        // باقي الطلبات تحتاج JWT
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->
@@ -59,7 +72,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
 
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:63342")); // مؤقتاً سيتم هنا تحديد frontend url
+        configuration.setAllowedOrigins(List.of("https://pulse-chat-ah4s.onrender.com"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
