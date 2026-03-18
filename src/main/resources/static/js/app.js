@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8081";
+const API_URL = "https://pulse-chat-ah4s.onrender.com";
 let token = null;
 let conversationId = null;
 let stompClient = null;
@@ -88,7 +88,7 @@ async function searchUsers() {
 // ------------------- START CONVERSATION -------------------
 async function startConversation(userId, username) {
 
-        const response = await fetch(`http://localhost:8081/api/conversations/${userId}`, {
+        const response = await fetch(`${API_URL}/api/conversations/${userId}`, {
             method: "POST",
             headers: {
                 "Authorization": "Bearer " + token
