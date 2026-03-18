@@ -1,4 +1,4 @@
-const API_URL = "";
+const API_URL = window.location.origin;
 let token = null;
 let conversationId = null;
 let stompClient = null;
@@ -116,7 +116,7 @@ async function startConversation(userId, username) {
 // ------------------- CONNECT TO WEBSOCKET -------------------
 function connectWebSocket() {
 
-    const socket = new SockJS(`${API_URL}/ws`);
+    const socket = new SockJS("/ws");
     stompClient = Stomp.over(socket);
 
     stompClient.connect(
