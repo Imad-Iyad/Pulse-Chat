@@ -1,128 +1,143 @@
-/* -------- GLOBAL -------- */
-
-body{
-    font-family: "Segoe UI", Arial, sans-serif;
-    background:#f4f6f9;
-    margin:0;
-    padding:0;
+/* ================= GENERAL ================= */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f7fa;
 }
 
-h2{
-    margin-top:0;
+/* ================= AUTH (LOGIN + REGISTER) ================= */
+#auth {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
-button{
-    background:#4CAF50;
-    color:white;
-    border:none;
-    padding:8px 14px;
-    border-radius:6px;
-    cursor:pointer;
+/* Login + Register Box */
+#loginBox, #registerBox {
+    width: 90%;
+    max-width: 400px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-button:hover{
-    background:#43a047;
+/* Inputs */
+input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    box-sizing: border-box;
 }
 
-input{
-    padding:8px;
-    border:1px solid #ddd;
-    border-radius:6px;
-    width:100%;
-    box-sizing:border-box;
+/* Buttons */
+button {
+    margin-top: 15px;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    background: #4CAF50;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
 }
 
-/* -------- AUTH -------- */
-
-#auth{
-    width:350px;
-    margin:100px auto;
-    padding:25px;
-    background:white;
-    border-radius:10px;
-    box-shadow:0 5px 20px rgba(0,0,0,0.1);
+button:hover {
+    background: #45a049;
 }
 
-/* -------- MAIN APP -------- */
-
-#app{
-    max-width:900px;
-    margin:30px auto;
+/* Error */
+.error {
+    color: red;
+    font-size: 14px;
 }
 
-/* -------- SEARCH -------- */
-
-#searchInput{
-    width:100%;
+/* Links */
+a {
+    color: #4CAF50;
+    text-decoration: none;
 }
 
-#results button{
-    background:white;
-    border:1px solid #ddd;
-    color:#333;
+/* ================= MAIN APP ================= */
+#app {
+    padding: 20px;
 }
 
-#results button:hover{
-    background:#f2f2f2;
+/* ================= CHAT ================= */
+#chat {
+    display: none;
+    height: 100vh;
+    flex-direction: column;
 }
 
-/* -------- CHAT -------- */
-
-#chat{
-    margin-top:20px;
-    background:white;
-    border-radius:10px;
-    padding:15px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+/* Messages area */
+.messages-box {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    background: #e5ddd5;
 }
 
-/* -------- MESSAGES BOX -------- */
-
-.messages-box{
-    height:400px;
-    overflow-y:auto;
-    border:1px solid #eee;
-    padding:10px;
-    border-radius:8px;
-    background:#fafafa;
-
-    display:flex;
-    flex-direction:column;
+/* Message bubbles */
+.message {
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    max-width: 70%;
+    word-wrap: break-word;
 }
 
-/* -------- MESSAGE BUBBLES -------- */
-
-.message{
-    max-width:60%;
-    padding:8px 12px;
-    margin:6px 0;
-    border-radius:16px;
-    font-size:14px;
-    word-wrap:break-word;
+/* My messages */
+.my-message {
+    background: #dcf8c6;
+    margin-left: auto;
 }
 
-.my-message{
-    align-self:flex-end;
-    background:#dcf8c6;
+/* Others */
+.other-message {
+    background: #fff;
 }
 
-.other-message{
-    align-self:flex-start;
-    background:#e4e6eb;
+/* Send area */
+.send-area {
+    display: flex;
+    padding: 10px;
+    gap: 10px;
+    background: #fff;
+    border-top: 1px solid #ddd;
 }
 
-/* -------- INPUT AREA -------- */
-
-#messageInput{
-    margin-top:10px;
+.send-area input {
+    flex: 1;
 }
 
-.send-area{
-    display:flex;
-    gap:10px;
-    margin-top:10px;
+.send-area button {
+    width: auto;
+    padding: 10px 15px;
 }
 
-.send-area input{
-    flex:1;
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+    #loginBox, #registerBox {
+        padding: 20px;
+    }
+
+    h2 {
+        text-align: center;
+    }
+
+    button {
+        font-size: 15px;
+    }
+
+    .message {
+        max-width: 85%;
+    }
+
 }
