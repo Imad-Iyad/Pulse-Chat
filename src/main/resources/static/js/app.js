@@ -1,4 +1,4 @@
-const API_URL = "https://pulse-chat-ah4s.onrender.com";
+const API_URL = "";
 let token = null;
 let conversationId = null;
 let stompClient = null;
