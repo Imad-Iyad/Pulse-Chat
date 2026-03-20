@@ -1,5 +1,6 @@
 package com.imad.pulsechat.chat;
 
+import com.imad.pulsechat.chat.dto.ConversationListDto;
 import com.imad.pulsechat.chat.dto.MessageResponse;
 import com.imad.pulsechat.chat.dto.SendMessageRequest;
 import com.imad.pulsechat.common.enums.ConversationType;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -42,9 +44,7 @@ public class ChatService {
                         .anyMatch(user -> user.getId().equals(sender.getId()));
 
         if (!isParticipant) {
-            throw new ForbiddenException(
-                    "You are not a participant in this conversation"
-            );
+            throw new ForbiddenException("You are not a participant in this conversation");
         }
 
         Message message = Message.builder()
@@ -119,5 +119,43 @@ public class ChatService {
                     "You are not allowed in this conversation"
             );
         }
+    }
+
+    public List<ConversationListDto> getUserConversations(UUID userId) {
+
+        List<Conversation> conversations =
+                conversationRepository.findAllByUserId(userId);
+
+        return conversations.stream().map(conversation -> {
+
+                    //الطرف الثاني
+                    User otherUser = conversation.getParticipants()
+                            .stream()
+                            .filter(u -> !u.getId().equals(userId))
+                            .findFirst()
+                            .orElseThrow();
+
+                    //آخر رسالة
+                    Optional<Message> lastMessageOpt =
+                            messageRepository.findTopByConversationIdOrderBySentAtDesc(conversation.getId());
+
+                    String lastMessage = lastMessageOpt.map(Message::getContent).orElse(null);
+                    LocalDateTime lastMessageTime = lastMessageOpt.map(Message::getSentAt).orElse(null);
+
+                    return ConversationListDto.builder()
+                            .conversationId(conversation.getId())
+                            .otherUserId(otherUser.getId())
+                            .otherUsername(otherUser.getUsername())
+                            .lastMessage(lastMessage)
+                            .lastMessageTime(lastMessageTime)
+                            .build();
+
+                })
+                .sorted((a, b) -> {
+                    if (a.getLastMessageTime() == null) return 1;
+                    if (b.getLastMessageTime() == null) return -1;
+                    return b.getLastMessageTime().compareTo(a.getLastMessageTime());
+                })
+                .toList();
     }
 }

@@ -1,4 +1,4 @@
-const API_URL = window.location.origin;
+const API_URL = "window.location.origin" //"http://localhost:8080/";
 let token = null;
 let conversationId = null;
 let stompClient = null;
@@ -40,6 +40,7 @@ async function login() {
 function showApp() {
     document.getElementById("auth").style.display = "none";
     document.getElementById("app").style.display = "block";
+    loadConversations();
 }
 
 // ------------------- LOGOUT -------------------
@@ -280,3 +281,56 @@ async function register(){
         alert("Server error");
     }
 }
+
+async function loadConversations() {
+
+    const response = await fetch("/api/conversations", {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    const data = await response.json();
+
+    const container = document.getElementById("conversations");
+    container.innerHTML = "";
+
+    data.forEach(conv => {
+
+        const div = document.createElement("div");
+        div.classList.add("conversation-item");
+
+        div.innerHTML = `
+            <strong>${conv.otherUsername}</strong><br>
+            <small>${conv.lastMessage || "No messages yet"}</small>
+        `;
+
+        div.onclick = () => {
+            selectConversation(div, conv);
+        };
+
+        container.appendChild(div);
+    });
+}
+
+function selectConversation(element, conv) {
+
+    // إزالة active من الكل
+    document.querySelectorAll(".conversation-item")
+        .forEach(el => el.classList.remove("active"));
+
+    // إضافة active
+    element.classList.add("active");
+
+    // تعيين المحادثة
+    conversationId = conv.conversationId;
+
+    document.getElementById("chatTitle").innerText =
+        "Chat with " + conv.otherUsername;
+
+    document.getElementById("chat").style.display = "block";
+
+    loadMessages();
+    connectWebSocket();
+}
+

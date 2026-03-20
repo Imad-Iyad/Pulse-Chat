@@ -1,14 +1,18 @@
 package com.imad.pulsechat.chat;
 
+import com.imad.pulsechat.chat.dto.ConversationListDto;
 import com.imad.pulsechat.chat.dto.ConversationResponse;
 import com.imad.pulsechat.chat.dto.MessageResponse;
 import com.imad.pulsechat.user.User;
 import com.imad.pulsechat.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -57,5 +61,17 @@ public class ChatRestController {
                         .map(User::getId)
                         .collect(Collectors.toSet())
         );
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ConversationListDto>> getUserConversations(Principal principal) {
+
+        String username = principal.getName();
+
+        User user = userRepository
+                .findByUsername(username)
+                .orElseThrow();
+
+        return ResponseEntity.ok(chatService.getUserConversations(user.getId()));
     }
 }
