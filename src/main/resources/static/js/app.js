@@ -1,4 +1,4 @@
-const API_URL = "window.location.origin" //"http://localhost:8080/";
+const API_URL = window.location.origin //"http://localhost:8080/";
 let token = null;
 let conversationId = null;
 let stompClient = null;
