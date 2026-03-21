@@ -49,7 +49,7 @@ function logout() {
     token = null;
     document.getElementById("auth").style.display = "block";
     document.getElementById("app").style.display = "none";
-    document.getElementById("chat").style.display = "none";
+    //document.getElementById("chat").style.display = "none";
 }
 
 // ------------------- SEARCH USERS -------------------
@@ -106,7 +106,7 @@ async function startConversation(userId, username) {
         conversationId = conversation.conversationId;
 
         document.getElementById("chatTitle").innerText = "Chat with " + username;
-        document.getElementById("chat").style.display = "block";
+        //document.getElementById("chat").style.display = "block";
 
         // تحميل الرسائل القديمة
         await loadMessages();
@@ -328,7 +328,7 @@ function selectConversation(element, conv) {
     document.getElementById("chatTitle").innerText =
         "Chat with " + conv.otherUsername;
 
-    document.getElementById("chat").style.display = "block";
+    //document.getElementById("chat").style.display = "block";
 
     loadMessages();
     connectWebSocket();
