@@ -4,6 +4,7 @@ let conversationId = null;
 let stompClient = null;
 let currentUsername = null;
 let subscription = null;
+let searchTimeout;
 
 // ------------------- LOGIN -------------------
 async function login() {
@@ -54,64 +55,74 @@ function logout() {
 
 // ------------------- SEARCH USERS -------------------
 async function searchUsers() {
+    clearTimeout(searchTimeout);
 
-    const query = document.getElementById("searchInput").value;
+    searchTimeout = setTimeout(async () => {
 
-    const response = await fetch(`${API_URL}/api/users/search?query=${query}&page=0&size=10`, {
-        headers: {
-            "Authorization": `Bearer ${token}`
+        const query = document.getElementById("searchInput").value;
+
+        if (!query) {
+            document.getElementById("results").innerHTML = "";
+            return;
         }
-    });
 
-    const data = await response.json();
+        const response = await fetch(`${API_URL}/api/users/search?query=${query}&page=0&size=10`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
 
-    const resultsList = document.getElementById("results");
-    resultsList.innerHTML = "";
+        const data = await response.json();
 
-    data.content.forEach(user => {
+        const resultsList = document.getElementById("results");
+        resultsList.innerHTML = "";
 
-        const button = document.createElement("button");
+        data.content.forEach(user => {
 
-        button.innerText = user.username + " (" + user.status + ")";
+            const button = document.createElement("button");
 
-        button.style.display = "block";
-        button.style.width = "100%";
-        button.style.marginTop = "10px";
+            button.innerText = user.username + " (" + user.status + ")";
 
-        button.onclick = () => {
-            startConversation(user.id, user.username);
-        };
+            /*button.style.display = "block";
+            button.style.width = "100%";
+            button.style.marginTop = "10px";*/
 
-        resultsList.appendChild(button);
-    });
+            button.onclick = () => {
+                startConversation(user.id, user.username);
+            };
+
+            resultsList.appendChild(button);
+        });
+    },300);
 }
 
 // ------------------- START CONVERSATION -------------------
 async function startConversation(userId, username) {
 
-        const response = await fetch(`${API_URL}/api/conversations/${userId}`, {
-            method: "POST",
-            headers: {
-                "Authorization": "Bearer " + token
-            }
-        });
-
-        if (!response.ok) {
-            alert("Failed to create conversation");
-            return;
+    const response = await fetch(`${API_URL}/api/conversations/${userId}`, {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + token
         }
+    });
 
-        const conversation = await response.json();
+    if (!response.ok) {
+        alert("Failed to create conversation");
+        return;
+    }
 
-        conversationId = conversation.conversationId;
+    const conversation = await response.json();
 
-        document.getElementById("chatTitle").innerText = "Chat with " + username;
-        //document.getElementById("chat").style.display = "block";
+    conversationId = conversation.conversationId;
 
-        // تحميل الرسائل القديمة
-        await loadMessages();
-        // الاتصال بالويب سوكيت
-        connectWebSocket();
+    document.getElementById("chatTitle").innerText = "Chat with " + username;
+
+    document.getElementById("results").innerHTML = "";
+    document.getElementById("searchInput").value = "";
+    // تحميل الرسائل القديمة
+    await loadMessages();
+    // الاتصال بالويب سوكيت
+    connectWebSocket();
 }
 
 // ------------------- CONNECT TO WEBSOCKET -------------------
