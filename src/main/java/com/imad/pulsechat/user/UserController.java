@@ -21,16 +21,16 @@ public class UserController {
     @GetMapping("/search")
     public Page<UserSearchResponse> searchUsers(
             @RequestParam String query,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            Principal principal
+            @RequestParam(defaultValue = "0") int page,  // start from the page of index zero
+            @RequestParam(defaultValue = "10") int size, // every page has 10 items
+            Principal principal // presentation about the current user (logged-in user)
     ) {
 
         return userService.searchUsers(
                 query,
                 page,
                 size,
-                principal.getName()
+                principal.getName() // return the username of the current user (logged-in user)
         );
     }
 

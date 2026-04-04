@@ -24,8 +24,7 @@ public class ChatWebSocketController {
 
         String username = principal.getName();
 
-        Message savedMessage =
-                chatService.saveMessage(request, username);
+        Message savedMessage = chatService.saveMessage(request, username);
 
         MessageResponse response = new MessageResponse(
                 savedMessage.getConversation().getId(),
@@ -36,8 +35,7 @@ public class ChatWebSocketController {
         );
 
         messagingTemplate.convertAndSend(
-                "/topic/conversation/" +
-                        request.getConversationId(),
+                "/topic/conversation/" + request.getConversationId(),
                         response
         );
     }
@@ -58,9 +56,8 @@ public class ChatWebSocketController {
         response.setTyping(request.isTyping());
 
         messagingTemplate.convertAndSend(
-                "/topic/conversation/" +
-                        request.getConversationId() + "/typing",
-                response
+                "/topic/conversation/" + request.getConversationId() + "/typing",
+                        response
         );
     }
 }

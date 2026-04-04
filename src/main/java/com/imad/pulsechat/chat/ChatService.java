@@ -27,14 +27,14 @@ public class ChatService {
     private final ConversationRepository conversationRepository;
     private final UserRepository userRepository;
 
-    public Message saveMessage(SendMessageRequest request, String username) {
+    public Message saveMessage(SendMessageRequest request, String senderUsername) {
 
         Conversation conversation =
                 conversationRepository.findById(request.getConversationId())
                         .orElseThrow();
 
         User sender =
-                userRepository.findByUsername(username)
+                userRepository.findByUsername(senderUsername)
                         .orElseThrow();
 
         //تحقق إنه المستخدم مشارك في المحادثة
